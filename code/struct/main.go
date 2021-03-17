@@ -52,7 +52,7 @@ func main() {
 	fmt.Println(p2)
 	fmt.Println(p3)
 
-	//get person full name
+	//get person full name and print it out
 	fmt.Println(p1.fullname())
 	fmt.Println(p2.fullname())
 	fmt.Println(p3.fullname())
