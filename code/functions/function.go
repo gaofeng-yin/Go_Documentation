@@ -2,6 +2,8 @@ package main
 
 import "fmt"
 
+//you can write you function here or after main(). It's your choice, for me i prefer to write my functions after main().
+
 func main() {
 	//function greet()
 	greet()
