@@ -12,7 +12,7 @@ Given a measurement, return the patient's body temperature state.<br>
 <br>
 write a function:<br>
 <br>
-<code>func Solution(T string) string</code>
+<code>func temperature(T string) string</code>
 
 that, given a string T, describing a patient's body temperature in the Celsius scale, returns the name of the patient's temperature state. The string T is the form "DD.D", where D denotes digit.<br>
 <br>
