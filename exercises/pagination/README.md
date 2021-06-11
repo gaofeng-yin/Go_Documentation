@@ -43,26 +43,3 @@ The service should return a JSON in the following manner:
 ```
 
 The amount of items is defined by the `per_page` parameter.
-
-## Requirements
-
-* Produce tests;
-* Language preferably in Go, but JavaScript, PHP, Python or Java are also accepted;
-* Produce documentation in the description of the merge request (see below).
-
-## Delivery
-
-* You have 1 week to do this challenge.
-* Fork this repository into your own private space, do not clone and make changes in this repository;
-* Once you feel it's ready, open a merge request from your private space into this repository and tag the following people in the description:
-
-```
-@pedrocruz @joaoseabra @pedrosimoes @joaosousa
-```
-
-## Hints
-
-* Focus on what we’re asking, don’t play around;
-* Keep it simple, don’t over-engineer;
-* Keep it readable, we’re not playing golf. Code must be readable;
-* Test your solution, play with corner-cases. We’ll play your code against our unit test engine.
