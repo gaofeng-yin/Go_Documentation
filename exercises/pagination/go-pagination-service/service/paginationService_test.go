@@ -63,3 +63,10 @@ func TestGenerateName(t *testing.T) {
 		t.Fatalf("generateName(15)) got %v, want %v", observed, expected)
 	}
 }
+
+func BenchmarkPagination(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		pagination(4, 10, 2, 2)
+	}
+}
+

@@ -5,15 +5,12 @@ import (
 	"fmt"
 	"log"
 	"service/pagination/model"
+	"strconv"
 	"strings"
 )
 
 //Pagination service will print out Json containing all the information requested: metadata, pagination and items.
 func Paginationservice(page, per_page, total_page, boundaries, around uint) {
-	/* check if any value is negative
-	if page < 1 || per_page < 1 || total_page < 1 || boundaries < 0 || around < 0 {
-		log.Fatal("Negative number")
-	} */
 	//Data variable to store product information.
 	//Metadata is information about product.
 	productData := model.Data{
@@ -45,8 +42,9 @@ func Paginationservice(page, per_page, total_page, boundaries, around uint) {
 
 //Pagination function will create proper pagination with pages and boundaries.
 func pagination(current_page, total_page, boundaries, around uint) string {
-	//Slice of string to store pagination values.
-	//pagination := []string{}
+	//pagination is type strings.builder because we are going to write a variable number of strings.
+	//strings.Join for joining and concatenate string when you know exact number of things you are
+	//going to concatenate. Link:https://www.reddit.com/r/golang/comments/8vsa54/stringbuilder_is_slower_than_basic_string/
 	var pagination strings.Builder
 	//Counter to count beginning boundary.
 	//For example: boundaries = 3.
@@ -68,15 +66,16 @@ func pagination(current_page, total_page, boundaries, around uint) string {
 	//AroundRightLimit will be 10 and append to slice values around these limit.
 	AroundRightLimit := current_page + around
 
+	//i is type uint because total page is uint
 	for i := uint(1); i <= total_page; i++ {
 		switch {
 		//while countBeginBound is bigger than 0, append value to slice and decrement counter.
 		case countBeginBound > 0:
-			//I had to convert i to string because pagination it's a slice of string.
-
-			pagination.WriteString(fmt.Sprint(i))
+			//I opt strconv because is much more faster than fmt.Sprint(i), but if you
+			//want more readability use Sprint().
+			//sprintf vs stringConv: https://gist.github.com/montanaflynn/58df9a48e40baca8dcdc
+			pagination.WriteString(strconv.FormatUint(uint64(i), 10))
 			pagination.WriteString(" ")
-
 			countBeginBound--
 			//check if beginning boundary and around left have intersection.
 			//If true, increment countAroundLeft.
@@ -94,38 +93,36 @@ func pagination(current_page, total_page, boundaries, around uint) string {
 			}
 		//when i is at ending boundary, append these values and increment countEndBound.
 		case i-1 == countEndBound:
-			pagination.WriteString(fmt.Sprint(i))
+			pagination.WriteString(strconv.FormatUint(uint64(i), 10))
 			pagination.WriteString(" ")
 
 			countEndBound++
 		//Append current page to slice.
 		case i == current_page:
-			pagination.WriteString(fmt.Sprint(i))
+			pagination.WriteString(strconv.FormatUint(uint64(i), 10))
 			pagination.WriteString(" ")
 
 		//Append number from left around current page and incremment left limit.
 		case AroundLeftLimit != current_page && AroundLeftLimit-i == 0:
-			pagination.WriteString(fmt.Sprint(i))
+			pagination.WriteString(strconv.FormatUint(uint64(i), 10))
 			pagination.WriteString(" ")
 
 			AroundLeftLimit++
 		//Appende number from right around current page and decrement right limit.
 		case AroundRightLimit != current_page && i > current_page:
-			pagination.WriteString(fmt.Sprint(i))
+			pagination.WriteString(strconv.FormatUint(uint64(i), 10))
 			pagination.WriteString(" ")
 
 			AroundRightLimit--
 
-			//testing here : jump directly to endbound
+			//Jump directly to the end bound.
 			if i == current_page+around {
 				pagination.WriteString("... ")
 				i = countEndBound
 			}
 		}
 	}
-	//Return pagination.
-	//Convert slice of string to string.
-	//return strings.Join(pagination, " ")
+	//Return pagination in string.
 	return pagination.String()
 }
 
@@ -167,3 +164,4 @@ func generateName(id uint) string {
 		return ""
 	}
 }
+
