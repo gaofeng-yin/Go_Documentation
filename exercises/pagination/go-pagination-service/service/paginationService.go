@@ -2,15 +2,14 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"service/pagination/model"
 	"strconv"
 	"strings"
 )
 
-//Pagination service will print out Json containing all the information requested: metadata, pagination and items.
-func Paginationservice(page, per_page, total_page, boundaries, around uint) {
+//Pagination service will return Json, in string, containing all the information requested: metadata, pagination and items.
+func Paginationservice(page, per_page, total_page, boundaries, around uint) string {
 	//Data variable to store product information.
 	//Metadata is information about product.
 	productData := model.Data{
@@ -28,8 +27,8 @@ func Paginationservice(page, per_page, total_page, boundaries, around uint) {
 	productData.Items = productList(page, per_page)
 
 	//Encode pageData in Json.
-	//uncomment next line for formated json
-	//dataToJson, err := json.MarshalIndent(data, "", " ")
+	//uncomment next line for formated json. The performance is better encoding without indent.
+	//dataToJson, err := json.MarshalIndent(productData, "", " ")
 	dataToJson, err := json.Marshal(productData)
 	//In case of error, program ends here and logs the error
 	if err != nil {
@@ -37,7 +36,7 @@ func Paginationservice(page, per_page, total_page, boundaries, around uint) {
 	}
 
 	//Print output in string because Marshal returns in type []byte.
-	fmt.Println(string(dataToJson))
+	return string(dataToJson)
 }
 
 //Pagination function will create proper pagination with pages and boundaries.
@@ -74,7 +73,7 @@ func pagination(current_page, total_page, boundaries, around uint) string {
 			//I opt strconv because is much more faster than fmt.Sprint(i), but if you
 			//want more readability use Sprint().
 			//sprintf vs stringConv: https://gist.github.com/montanaflynn/58df9a48e40baca8dcdc
-			pagination.WriteString(strconv.FormatUint(uint64(i), 10))
+			pagination.WriteString(strconv.FormatUint(uint64(i), 10)) //fmt.Sprint(i)
 			pagination.WriteString(" ")
 			countBeginBound--
 			//check if beginning boundary and around left have intersection.
@@ -164,4 +163,3 @@ func generateName(id uint) string {
 		return ""
 	}
 }
-
