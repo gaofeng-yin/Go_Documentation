@@ -31,7 +31,7 @@ func main() {
 
 	json.Unmarshal(byteValue, &numbers)
 
-	cretedFile, err := os.Create("formatedNumbers.json")
+	cretedFile, err := os.Create("formatedNumbers.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
