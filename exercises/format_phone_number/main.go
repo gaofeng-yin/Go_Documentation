@@ -20,7 +20,8 @@ type Number struct {
 func main() {
 	jsonFile, err := os.Open("phoneNumber.json")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
 	}
 	defer jsonFile.Close()
 
