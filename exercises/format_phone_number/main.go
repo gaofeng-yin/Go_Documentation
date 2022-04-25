@@ -14,37 +14,42 @@ type Numbers struct {
 }
 
 type Number struct {
+	Name   string `json:"Name"`
 	Number string `json:"Number"`
 }
 
 func main() {
-	jsonFile, err := os.Open("phoneNumber.json")
+	inputFile, err := os.Open("phoneNumber.json")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
-	defer jsonFile.Close()
+	defer inputFile.Close()
 
-	byteValue, _ := ioutil.ReadAll(jsonFile)
+	fileData, _ := ioutil.ReadAll(inputFile)
 
 	var numbers Numbers
 
-	json.Unmarshal(byteValue, &numbers)
+	json.Unmarshal(fileData, &numbers)
 
-	cretedFile, err := os.Create("formatedNumbers.txt")
+	outputFile, err := os.Create("formatedNumbers.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	defer cretedFile.Close()
+	defer outputFile.Close()
 
 	for _, value := range numbers.Numbers {
-		cretedFile.WriteString(reformatPhoneNumber(value.Number))
-		cretedFile.WriteString("\n")
+		writeToFile(value.Name, value.Number, outputFile)
 	}
+
+	fmt.Println("Success!")
 }
 
 func reformatPhoneNumber(phoneNumber string) string {
+	if len(phoneNumber) < 2 {
+		return "Unsupported number"
+	}
 	var cleanNumber string = removeSpacesAndDashes(phoneNumber)
 	var cleanedNumber []string
 
@@ -71,4 +76,10 @@ func removeSpacesAndDashes(number string) string {
 
 func swapValue(val1 *string, val2 *string) {
 	*val1, *val2 = *val2, *val1
+}
+
+func writeToFile(name string, number string, file *os.File) {
+	file.WriteString("Name: " + name + "\n")
+	file.WriteString("PhoneNumber: " + reformatPhoneNumber(number) + "\n")
+	file.WriteString("\n")
 }
